@@ -14,12 +14,6 @@ function Book({ book }) {
             <h5 className="card-title"> {book.title}</h5>
 
             <p className="card-text">-Tác giả: {book.author}</p>
-            <p className="card-text">
-              <AiOutlineUnorderedList className="mr-2" />
-              {book.numberPage}
-            </p>
-            <p className="card-text">-Thể loại: {book.category}</p>
-            {/* <p className="card-text">{book.description}</p> */}
           </div>
         </div>
       </div>

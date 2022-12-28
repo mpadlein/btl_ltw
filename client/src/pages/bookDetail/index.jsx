@@ -8,11 +8,14 @@ import { AiTwotoneStar } from "react-icons/ai";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
+
 function BookDetail() {
   const { id } = useParams();
 
   //   console.log(id);
   const [commnet, setComment] = useState(undefined);
+  const [rating, setRating] = useState(5)
   const [book, setBook] = useState(undefined);
   const [quantity, setQuantity] = useState(1);
   useEffect(() => {
@@ -46,7 +49,29 @@ function BookDetail() {
         toast.success("Them san pham thanh cong", { position: "bottom-right", theme: "colored" });
       }
     } catch (error) {}
-  };
+    };
+
+    const handleReview = async () => {
+      try {
+        // console.log(id);
+        const data = await axios({
+          method: "POST",
+          url: "/review",
+          data: { 
+            id, 
+            rating, 
+            comment: document.getElementById('comment').value 
+          },
+          headers: {
+            Authorization: `Bearer ${JSON.parse(localStorage.getItem(AppName)).accessToken}`,
+          },
+        });
+        if (data.data) {
+          toast.success("Da gui danh gia", { position: "bottom-right", theme: "colored" });
+        }
+      } catch (error) {}
+      };
+
   return (
     <>
       {book && (
@@ -86,11 +111,21 @@ function BookDetail() {
           <div className="container" style={{ marginTop: "80px" }}>
             <div className="form-outline mb-4">
               <h4 className="float-left">
-                Nhận xét: <AiTwotoneStar className="star" /> <AiTwotoneStar className="star" /> <AiTwotoneStar className="star" /> <AiTwotoneStar className="star" /> <AiTwotoneStar className="star" />
+                Nhận xét: 
+                {Array.from({ length: 5 }).map((it, i) => {
+                  if (i < rating) {
+                    return <AiTwotoneStar 
+                    className="star" 
+                    style={{color: '#b2a900'}} 
+                    onClick={() => {setRating(i+1)}}
+                    />
+                  }
+                  return <AiTwotoneStar className="star" onClick={() => {setRating(i+1)}}/>
+                })}
               </h4>
 
-              <textarea type="date" className="form-control form-control-lg" name="description" placeholder="Nhận xét" rows="4" cols="50" required></textarea>
-              <div className="btn btn-outline-success">Gửi nhận xét</div>
+              <textarea type="date" id="comment" className="form-control form-control-lg" name="description" placeholder="Nhận xét" rows="4" cols="50" required></textarea>
+              <div className="btn btn-outline-success" onClick={handleReview}>Gửi nhận xét</div>
             </div>
             <div>
               {commnet.map((item) => (

@@ -73,11 +73,43 @@ const getBook = async (req, res) => {
 const addToCart = async (req, res) => {
   const uid = req.user.id;
   try {
-    await connect.promise().execute(`insert into CartItem values (0, ${uid}, ${req.body.id}, ${req.body.id})`);
+    await connect.promise().execute(`insert into CartItem (userID, bookID, quantity) values (${uid}, ${req.body.id}, ${req.body.quantity})`);
     res.json(true);
   } catch (error) {
     console.log(error);
   }
 };
+
+
+const addReview = async(req, res) => {
+  const uid = req.user.id;
+  try {
+    await connect.promise().execute(`insert into BookReview (userID, bookID, numberVote, content) values (${uid}, ${req.body.id}, ${req.body.rating}, "${req.body.comment}")`);
+    res.json(true);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+const getCartItems = async(req, res) => {
+  try {
+    let data = await connect.promise().query(`SELECT * FROM CartItem WHERE userID=${req.user.id}`);
+    data = data[0]
+    res.json(data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const deleteCartItem = async(req, res) => {
+  try {
+    let data = await connect.promise().query(`DELETE FROM CartItem WHERE userID=${req.user.id} and id=${req.body.id}`);
+    res.json(true);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 // const updateBook = async (req, res) => {};
-export { createBook, deleteBook, editBook, addToCart, getAllBooks, uploadFile, getBook };
+export { createBook, deleteBook, editBook, addToCart, getAllBooks, uploadFile, getBook, addReview, getCartItems, deleteCartItem };

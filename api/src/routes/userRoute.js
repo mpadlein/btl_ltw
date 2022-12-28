@@ -10,7 +10,10 @@ router.get("/test", (req, res) => {
 
 router.post("/uploadFile", upload.single("file"), userCtrl.uploadFile);
 router.post("/createBook", userCtrl.createBook);
+router.post("/review", userCtrl.addReview);
 router.put("/editBook", userCtrl.editBook);
 router.post("/addToCart", userCtrl.addToCart);
 router.delete("/deleteBook", userCtrl.deleteBook);
+router.get('/cartItems', userCtrl.getCartItems);
+router.delete('/cartItems', userCtrl.deleteCartItem);
 export default router;
